@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os, json
 from django.core.exceptions import ImproperlyConfigured
-
+#from accounts.models import User
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,13 +34,20 @@ def get_secret(setting, secrets=secrets):
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i($l*%m@^h4n5i@jl4og#!!pqpj@ijqkhqujen%*u^%@eonwip'
+SECRET_KEY = get_secret("SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+    ]
 
 # Application definition
 
@@ -51,7 +58,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.postgres',
+    'accounts.apps.AccountsConfig',
+    'projects.apps.ProjectsConfig',
+    'forum.apps.ForumConfig',
+    'django.contrib.postgres', #postgreSQL db, psycopg2 pkg
+    'allauth', # django all-auth
+    'allauth.account', # django all-auth
+    'allauth.socialaccount', # django alla-uth
+    'allauth.socialaccount.providers.github', # django all-auth
+    'django.contrib.sites', #django all-auth
 ]
 
 MIDDLEWARE = [
@@ -135,3 +150,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+###DJANGO ALL-AUTH####
+SITE_ID = 1
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': get_secret("GITHUB_CLIENT_ID"),
+            'secret': get_secret("GITHUB_CLIENT_SECRET"),
+            'key': ''
+        }
+    }
+}
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+
+SOCIALACCOUNT_ADAPTER = "account.adapter.SocialAccountAdapter"
+ACCOUNT_ADAPTER = "account.adapter.AccountAdapter"
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+#Updating reference to new user model
+AUTH_USER_MODEL = 'accounts.User'
+######################

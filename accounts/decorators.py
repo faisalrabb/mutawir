@@ -1,0 +1,10 @@
+#from django.contrib.auth.decorators import user_passes_test
+from account.models import User
+
+def check_signup_complete(user):
+    if user.is_authenticated:
+        if user.username is not None:
+            return True
+    return False
+
+#@user_passes_test(check_signup_complete, login_url='account/profile_info/')

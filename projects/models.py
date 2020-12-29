@@ -1,3 +1,9 @@
 from django.db import models
 
-# Create your models here.
+
+class Project(models.Model):
+    pass
+
+class Role(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    
