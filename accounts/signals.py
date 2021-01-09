@@ -7,7 +7,8 @@ from allauth.socialaccount.models import SocialAccount
 def generate_username(sender, instance, *args, **kwargs):
     if instance.username == None:
         try:
-            instance.username = SocialAccount.objects.get(user=instance).extra_data['login']
+            username = SocialAccount.objects.get(user=instance).extra_data['login']
+            instance.username = username
             instance.save()
         except:
             pass

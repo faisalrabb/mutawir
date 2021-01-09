@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from accounts.views import index
+from django.conf.urls.static import static
+from mutawir import settings
 
 
 urlpatterns = [
@@ -23,4 +25,4 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
     path('', index)
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

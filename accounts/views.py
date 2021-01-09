@@ -39,23 +39,25 @@ def user_info(request):
     user = request.user
     if request.method == "POST":
         #apply changes
-        form=SearchForm(request.POST)
+        form=SearchForm(request.POST, request.FILES)
         if form.is_valid():
             user.first_name =form['first_name']
             user.last_name =form['last_name']
             user.full_name = (form['first_name']+" "+form['last_name'])
             user.country = form['country']
-            user.profile_picture = form['profile_picture']
             user.skills = form['skills']
             user.bio = form['bio']
             user.linked_in_link = form['linked_in_link']
             user.crypto_public_key = form['crypto_public_key']
             user.paypal_email = form['paypal_email']
-            try: 
-                username = SocialAccount.objects.get(user=request.user).extra_data['login']
-                user.username=username
-            except ObjectDoesNotExist:
-                raise Http404()
+            if form['profile_picture'] != None:
+                user.profile_picture = form['profile_picture']
+            if user.username is None:
+                try: 
+                    username = SocialAccount.objects.get(user=request.user).extra_data['login']
+                    user.username=username
+                except ObjectDoesNotExist:
+                    raise Http404()
             try:
                 user.save()
             except IntegrityError:

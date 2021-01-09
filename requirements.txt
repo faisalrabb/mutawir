@@ -1,2 +1,3 @@
 django-allauth
 psycopg2
+django-autoslug

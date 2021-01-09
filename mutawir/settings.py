@@ -178,3 +178,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 #Updating reference to new user model
 AUTH_USER_MODEL = 'accounts.User'
 ######################
+
+MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
