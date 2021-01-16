@@ -49,7 +49,7 @@ def user_info(request):
             user.bio = form['bio']
             user.linked_in_link = form['linked_in_link']
             user.crypto_public_key = form['crypto_public_key']
-            user.paypal_email = form['paypal_email']
+            #user.paypal_email = form['paypal_email']
             if form['profile_picture'] != None:
                 user.profile_picture = form['profile_picture']
             if user.username is None:
@@ -73,7 +73,7 @@ def user_info(request):
             'profile_picture': user.profile_picture,
             'skills': user.skills,
             'bio': user.bio,
-            'paypal_email': user.paypal_email,
+            #'paypal_email': user.paypal_email,
             'crypto_public_key': user.crypto_public_key,
             'linked_in_link': user.linked_in_link,
             }

@@ -164,20 +164,27 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': get_secret("GITHUB_CLIENT_ID"),
             'secret': get_secret("GITHUB_CLIENT_SECRET"),
             'key': ''
-        }
+        },
+        "VERIFIED_EMAIL": True
     }
 }
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-
+# to get it to compile, need to set these two
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED=True
+#
+SOCIALACCOUNT_EMAIL_VERIFICATION = "optional"
 SOCIALACCOUNT_ADAPTER = "account.adapter.SocialAccountAdapter"
 ACCOUNT_ADAPTER = "account.adapter.AccountAdapter"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+SOCIALACCOUNT_FORMS = {'signup': 'accounts.forms.UserInfoForm'} #fix
+SOCIALACCOUNT_AUTO_SIGNUP = True
+#ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/profile_info/"
+ACCOUNT_SESSION_REMEMBER = True
+SOCIALACCOUNT_STORE_TOKENS = True
 #Updating reference to new user model
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = "accounts.User"
 ######################
 
 MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"

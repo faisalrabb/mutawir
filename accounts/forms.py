@@ -13,7 +13,7 @@ class UserInfoForm(forms.Form):
     bio = forms.CharField()
     linked_in_link = forms.URLField(validators=[check_linkedin_link], required=False)
     crypto_public_key = forms.CharField(max_length=42, required=False, validators=[check_crypto_hash])
-    paypal_email = forms.EmailField(required=False)
+    #paypal_email = forms.EmailField(required=False)
 
 class SearchForm(forms.Form):
     country = forms.ChoiceField(choices=COUNTRIES, required=False)

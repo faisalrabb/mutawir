@@ -3,7 +3,7 @@ from account.models import User
 
 def check_signup_complete(user):
     if user.is_authenticated:
-        if user.username is not None:
+        if user.country is not '':
             return True
     return False
 
