@@ -100,6 +100,7 @@ def new_board(request):
             a = form.save(commit=False)
             a.moderators.add(request.user)
             a.save()
+            a.save_m2m()
         else:
             form.add_error(None,"Form submission invalid. Please try again.")
     else:

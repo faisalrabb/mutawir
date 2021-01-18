@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import User
 from django.urls import reverse
+from django.db.models import UniqueConstraint, Q
 #from autoslug import AutoSlugField
 
 REPO_ACCESS = (
@@ -10,7 +11,7 @@ REPO_ACCESS = (
     ('maintain', 'maintain'),
     ('admin', 'admin')
 )
-
+ 
 METHOD = (
     ('Crpyotcurrency', (
         ('USDC', 'USD Coin'),
@@ -33,17 +34,23 @@ class License(models.Model):
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField(unique=True)
 
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
-    name = models.CharField(max_length=100, unique=True) #autogenerate from GitHub repo
+    name = models.CharField(max_length=200, unique=True) #autogenerate from GitHub repo
+    repo_name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     _license = models.ForeignKey(License, on_delete=models.SET_NULL, null=True)
     founders = models.ManyToManyField(User)
-    currency = models.CharField(max_length=10, choices=METHOD)
-    is_crypto = models.BooleanField()
+    currency = models.CharField(max_length=10, choices=METHOD, default=METHOD.USDC, blank=True)
+    is_crypto = models.BooleanField(default=True)
     policies = models.TextField(default='') #code of conduct/commit policies/etc.
     quorum = models.PositiveSmallIntegerField() #in percentage
+    minimum_number_of_votes_for = models.PositiveSmallIntegerField() #in percentage
     proposal_days_active = models.PositiveSmallIntegerField() #in days
     objects = ProjectSearch.as_manager() #not a field
+    published = models.BooleanField(default=False)
 
     @property
     def star_count(self):
@@ -192,10 +199,11 @@ class Proposal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     description =  models.TextField()
+    published = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     passed = models.BooleanField(default=False)
     passed_date = models.DateTimeField(default=None, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now=True)
     expiry_date = models.DateTimeField()
     number = models.PositiveSmallIntegerField() #number of proposal 
 
@@ -204,6 +212,7 @@ class Proposal(models.Model):
     
     class Meta:
         unique_together=['number', 'project']
+        constraints = [UniqueConstraint(fields=['user', 'project'], condition=Q(published=False), name='unique_unpublished_proposal')]
 
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
