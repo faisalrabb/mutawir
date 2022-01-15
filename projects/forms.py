@@ -1,5 +1,5 @@
 from django import forms
-from projects.models import Project
+from projects.models import Project, Proposal, GoalMotion
 from django.utils.translation import ugettext_lazy as _
 
 class ProjectForm(forms.ModelForm): #must be passed user instance p = ProjectForm(user=request.user)
@@ -53,4 +53,13 @@ class ProjectForm(forms.ModelForm): #must be passed user instance p = ProjectFor
             self.save_m2m()
         return instance
 
-
+class ProposalForm(forms.ModelForm):
+    class Meta:
+        model=Proposal
+        fields=['description']
+        labels = {
+            'description': _("Description")
+        }
+        help_text = {
+            'description': _('Explain what this proposal is hoping to accomplish and why you believe its necessary')
+        }
